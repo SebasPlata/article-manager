@@ -1,3 +1,4 @@
+![Django CI](https://github.com/SebasPlata/article-manager/actions/workflows/django-ci.yml/badge.svg)
 # Guía Completa para Crear y Configurar un Article Manager en Django
 
 **Tipo de presentación:** Documento técnico en Markdown publicado en
