@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Articles Manager</title>
+  <style>
+    :root{
+      --bg:#0b0f14; --panel:#0f1621; --text:#eaf0ff; --muted:#a9b4d0;
+      --line:rgba(255,255,255,.08);
+      --accent:#ff8800; --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius:18px;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background: radial-gradient(900px 500px at 15% 10%, rgba(255,136,0,.10), transparent 55%),
+                  radial-gradient(900px 500px at 80% 0%, rgba(255,177,0,.08), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+      min-height:100vh;
+    }
+    .fade-in{ animation: fadeIn .35s ease-out both; }
+    @keyframes fadeIn{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+
+    header{
+      position: sticky; top:0; z-index:10;
+      backdrop-filter: blur(10px);
+      background: rgba(11,15,20,.65);
+      border-bottom:1px solid var(--line);
+    }
+    .header-inner{
+      max-width: 1100px; margin:0 auto; padding:18px;
+      display:flex; align-items:center; justify-content:space-between; gap:14px;
+    }
+    .brand{ display:flex; align-items:center; gap:12px; text-decoration:none; color:var(--text); }
+    .logo{
+      width:42px; height:42px; border-radius:14px;
+      background: linear-gradient(135deg, rgba(255,136,0,.95), rgba(255,177,0,.85));
+      box-shadow: 0 8px 20px rgba(255,136,0,.22);
+      display:grid; place-items:center;
+      font-weight:900; letter-spacing:.5px; color:#101218;
+    }
+    .brand h1{ margin:0; font-size: 16px; letter-spacing:.8px; }
+    .brand p{ margin:2px 0 0; font-size: 12px; color: var(--muted); }
+
+    .container{ max-width:1100px; margin:26px auto 60px; padding:0 18px; }
+    .topbar{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:18px; flex-wrap:wrap; }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:10px 12px; border:1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      border-radius:999px; color:var(--muted); font-size:12px;
+    }
+    .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+    .btn{
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 14px;
+      cursor:pointer;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      font-weight: 700;
+      transition: transform .12s ease, background .12s ease, border-color .12s ease;
+    }
+    .btn:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.14); background: rgba(255,255,255,.06); }
+    .btn-primary{
+      border-color: rgba(255,136,0,.35);
+      background: linear-gradient(135deg, rgba(255,136,0,.22), rgba(255,177,0,.12));
+    }
+    .btn-primary:hover{ border-color: rgba(255,136,0,.55); }
+    .btn-danger{
+      border-color: rgba(255,80,80,.25);
+      background: rgba(255,80,80,.06);
+    }
+    .btn-danger:hover{ border-color: rgba(255,80,80,.40); background: rgba(255,80,80,.10); }
+
+    .grid{ display:grid; grid-template-columns: repeat(12, 1fr); gap:14px; }
+    .card{
+      grid-column: span 6;
+      border:1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+    .card h2{ margin:0 0 8px; font-size:16px; }
+    .card p{ margin:0; color:var(--muted); font-size:13px; line-height:1.45; white-space:pre-wrap; }
+
+    .row{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      margin-top:14px; padding-top:12px; border-top:1px solid var(--line);
+      flex-wrap:wrap;
+    }
+    .actions{ display:flex; gap:10px; flex-wrap:wrap; }
+    @media (max-width: 900px){ .card{ grid-column: span 12; } }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="header-inner">
+      <a class="brand" href="{% url 'articles:list' %}">
+        <div class="logo">PH</div>
+        <div>
+          <h1>ARTICLES MANAGER</h1>
+          <p>Panel simple • CRUD</p>
+        </div>
+      </a>
+      <a class="btn btn-primary" href="{% url 'articles:create' %}">+ Nuevo</a>
+    </div>
+  </header>
+
+  <main class="container fade-in">
+    <div class="topbar">
+      <div class="pill">Total: <span class="mono">{{ articles|length }}</span></div>
+    </div>
+
+    <div class="grid">
+      {% for a in articles %}
+        <div class="card">
+          <h2>{{ forloop.counter }}. {{ a.title }}</h2>
+          <p>{{ a.content|truncatechars:140 }}</p>
+
+          <div class="row">
+            <div class="pill">ID: <span class="mono">{{ a.pk }}</span></div>
+
+            <div class="actions">
+              <a class="btn" href="{% url 'articles:detail' a.pk %}">Ver</a>
+              <a class="btn" href="{% url 'articles:update' a.pk %}">Editar</a>
+              <form action="{% url 'articles:delete' a.pk %}" method="post" style="margin:0; display:inline;">
+                {% csrf_token %}
+                <button class="btn btn-danger" type="submit">Borrar</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <div class="card" style="grid-column: span 12;">
+          <h2>No hay artículos</h2>
+          <p>Crea uno con el botón “+ Nuevo”.</p>
+        </div>
+      {% endfor %}
+    </div>
+  </main>
+</body>
+</html>

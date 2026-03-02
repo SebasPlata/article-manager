@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Borrar - {{ object.title }}</title>
+  <style>
+    body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial;background:#0b0f14;color:#eaf0ff}
+    .wrap{max-width:900px;margin:30px auto;padding:0 16px}
+    .box{border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.03);border-radius:16px;padding:18px}
+    .muted{color:#a9b4d0}
+    .btn{border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.03);color:#eaf0ff;padding:10px 14px;border-radius:14px;text-decoration:none;font-weight:800;display:inline-flex;gap:8px;cursor:pointer}
+    .btn:hover{background:rgba(255,255,255,.06)}
+    .danger{border-color:rgba(255,80,80,.40);background:rgba(255,80,80,.10)}
+    .row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="box">
+      <h2 style="margin:0 0 10px;">¿Borrar este artículo?</h2>
+
+      <div class="muted" style="margin-bottom:12px;">
+        ID: <span class="mono">{{ object.pk }}</span> — <b>{{ object.title }}</b>
+      </div>
+
+      <p class="muted" style="margin:0 0 16px;">Esta acción no se puede deshacer.</p>
+
+      <form method="post">
+        {% csrf_token %}
+        <div class="row">
+          <button class="btn danger" type="submit">Sí, borrar</button>
+          <a class="btn" href="{% url 'articles:list' %}">Cancelar</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Detalle - {{ object.title }}</title>
+  <style>
+    body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial;background:#0b0f14;color:#eaf0ff}
+    .wrap{max-width:900px;margin:30px auto;padding:0 16px}
+    .box{border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.03);border-radius:16px;padding:18px}
+    .muted{color:#a9b4d0}
+    .btn{border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.03);color:#eaf0ff;padding:10px 14px;border-radius:14px;text-decoration:none;font-weight:700;display:inline-flex;gap:8px}
+    .btn:hover{background:rgba(255,255,255,.06)}
+    .danger{border-color:rgba(255,80,80,.35);background:rgba(255,80,80,.08)}
+    .row{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+    .mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="box">
+      <div class="row">
+        <div class="muted">ID: <span class="mono">{{ object.pk }}</span></div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <a class="btn" href="{% url 'articles:list' %}">← Volver</a>
+          <a class="btn" href="{% url 'articles:update' object.pk %}">Editar</a>
+          <form action="{% url 'articles:delete' object.pk %}" method="post" style="margin:0;">
+            {% csrf_token %}
+            <button class="btn danger" type="submit">Borrar</button>
+          </form>
+        </div>
+      </div>
+
+      <h2 style="margin:0 0 10px;">{{ object.title }}</h2>
+      <p class="muted" style="white-space:pre-wrap; line-height:1.7; margin:0;">{{ object.content }}</p>
+    </div>
+  </div>
+</body>
+</html>
